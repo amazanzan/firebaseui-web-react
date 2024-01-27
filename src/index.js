@@ -15,7 +15,8 @@
  */
 
 import FirebaseAuth from './FirebaseAuth';
-import StyledFirebaseAuth from './StyledFirebaseAuth';
+// import StyledFirebaseAuth from './StyledFirebaseAuth';
 
-exports.FirebaseAuth = FirebaseAuth;
-exports.StyledFirebaseAuth = StyledFirebaseAuth;
+export default FirebaseAuth;
+// exports.FirebaseAuth = FirebaseAuth;
+// exports.StyledFirebaseAuth = StyledFirebaseAuth;

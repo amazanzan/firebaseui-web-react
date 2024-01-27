@@ -1,3 +1,5 @@
+/* eslint-disable */ 
+
 /**
  * Copyright 2017 Google Inc. All Rights Reserved.
  *
@@ -48,7 +50,7 @@ export default class FirebaseAuth extends React.Component {
    */
   componentDidMount() {
     // Import the css only on the client.
-    require('firebaseui/dist/firebaseui.css');
+    require('../css/firebaseui.css');
 
     // Firebase UI only works on the Client. So we're loading the package in `componentDidMount`
     // So that this works when doing server-side rendering.
@@ -93,22 +95,6 @@ export default class FirebaseAuth extends React.Component {
     });
     return firebaseUiDeletion;
   }
-
-  /**
-   * Properties types.
-   */
-  props: {
-    // The Firebase UI Web UI Config object.
-    // See: https://github.com/firebase/firebaseui-web#configuration
-    uiConfig: Object,
-    // The Firebase App auth instance to use.
-    firebaseAuth: Object,
-    // Callback that will be passed the FirebaseUi instance before it is
-    // started. This allows access to certain configuration options such as
-    // disableAutoSignIn().
-    uiCallback?: Function,
-    className?: String,
-  };
 
   /**
    * @inheritDoc
