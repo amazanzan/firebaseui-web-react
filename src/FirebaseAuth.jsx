@@ -38,6 +38,7 @@ export default class FirebaseAuth extends React.Component {
   constructor(props) {
     super(props);
 
+    this.lang = props.lang;
     this.uiConfig = props.uiConfig;
     this.firebaseAuth = props.firebaseAuth;
     this.className = props.className;
@@ -54,8 +55,9 @@ export default class FirebaseAuth extends React.Component {
 
     // Firebase UI only works on the Client. So we're loading the package in `componentDidMount`
     // So that this works when doing server-side rendering.
-    // const firebaseui = require('firebaseui');
-    const firebaseui = require('../firebaseui-i18n/esm__ja');
+    this.lang ||= 'en';
+    if (this.lang === 'pt') this.lang = 'pt_br';
+    const firebaseui = require(`../firebaseui-i18n/esm__${this.lang}`);
 
     // Wait in case the firebase UI instance is being deleted.
     // This can happen if you unmount/remount the element quickly.

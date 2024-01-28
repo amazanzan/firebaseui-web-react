@@ -1,8 +1,8 @@
-// import * as firebaseui from 'firebaseui';
-import * as firebaseui from '../firebaseui-i18n/esm__ja';
+import * as firebaseui from '../firebaseui-i18n/esm__en';
 import * as React from 'react';
 
 export interface Props {
+  lang: string;
   uiConfig: firebaseui.auth.Config;
   uiCallback?(ui: firebaseui.auth.AuthUI): void;
   firebaseAuth: any; // As firebaseui-web
