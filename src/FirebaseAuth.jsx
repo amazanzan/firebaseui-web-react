@@ -49,7 +49,7 @@ export default class FirebaseAuth extends React.Component {
   /**
    * @inheritDoc
    */
-  componentDidMount() {
+  async componentDidMount() {
     // Import the css only on the client.
     require('firebaseui/dist/firebaseui.css');
 
@@ -57,35 +57,31 @@ export default class FirebaseAuth extends React.Component {
     // So that this works when doing server-side rendering.
     this.lang ||= 'en';
     if (this.lang === 'pt') this.lang = 'pt_br';
-    const firebaseui = require(`../firebaseui-i18n/esm__${this.lang}`);
+    const firebaseui = await import(`../firebaseui-i18n/esm__${this.lang}`);
 
     // Wait in case the firebase UI instance is being deleted.
     // This can happen if you unmount/remount the element quickly.
-    return firebaseUiDeletion.then(() => {
-      // Get or Create a firebaseUI instance.
-      this.firebaseUiWidget = firebaseui.auth.AuthUI.getInstance()
-           || new firebaseui.auth.AuthUI(this.firebaseAuth);
-      if (this.uiConfig.signInFlow === 'popup') {
+    await firebaseUiDeletion;
+    // Get or Create a firebaseUI instance.
+    this.firebaseUiWidget = firebaseui.auth.AuthUI.getInstance()
+      || new firebaseui.auth.AuthUI(this.firebaseAuth);
+    if (this.uiConfig.signInFlow === 'popup') {
+      this.firebaseUiWidget.reset();
+    }
+    // We track the auth state to reset firebaseUi if the user signs out.
+    this.userSignedIn = false;
+    this.unregisterAuthObserver = this.firebaseAuth.onAuthStateChanged((user) => {
+      if (!user && this.userSignedIn) {
         this.firebaseUiWidget.reset();
       }
-
-      // We track the auth state to reset firebaseUi if the user signs out.
-      this.userSignedIn = false;
-      this.unregisterAuthObserver = this.firebaseAuth.onAuthStateChanged((user) => {
-        if (!user && this.userSignedIn) {
-          this.firebaseUiWidget.reset();
-        }
-        this.userSignedIn = !!user;
-      });
-
-      // Trigger the callback if any was set.
-      if (this.uiCallback) {
-        this.uiCallback(this.firebaseUiWidget);
-      }
-
-      // Render the firebaseUi Widget.
-      this.firebaseUiWidget.start('#' + ELEMENT_ID, this.uiConfig);
+      this.userSignedIn = !!user;
     });
+    // Trigger the callback if any was set.
+    if (this.uiCallback) {
+      this.uiCallback(this.firebaseUiWidget);
+    }
+    // Render the firebaseUi Widget.
+    this.firebaseUiWidget.start('#' + ELEMENT_ID, this.uiConfig);
   }
 
   /**
